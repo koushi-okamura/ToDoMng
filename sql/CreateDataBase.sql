@@ -1,1 +1,1 @@
-create database ToDoManager_DB;
+create database ToDoManager_DB CHARACTER SET utf8;
