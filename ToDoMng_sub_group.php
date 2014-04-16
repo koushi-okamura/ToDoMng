@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'){
   break;
   case '削除':
         $sql = "DELETE FROM ToDoGrp_Tbl WHERE todogroup = '"
-         . $mysqlobj->Connect()->real_escape_string($_POST['delgrp']) . "';" ;
+         . $mysqlobj->Connect()->real_escape_string($_POST['groupname']) . "';" ;
 
         $obj->Run_ToDoGrp_Tbl($mysqlobj,$sql);
 
