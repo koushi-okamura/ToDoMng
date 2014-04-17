@@ -28,10 +28,10 @@ ToDoグループ名：<input type="text" name="groupname" size="30" />
 
 <form action="ToDoMng_sub_group.php" method="post">
 ToDoグループの削除...<br />
-ToDoグループ名：<select name="groupname" style="width:215px">
+ToDoグループ名：<select name="groupkey" style="width:215px">
    <?php if (count($posts) > 0): ?>
       <?php foreach($posts as $post): ?>
-         <option value="<?php echo htmlspecialchars($post['todogroup'],ENT_QUOTES,'UTF-8'); ?>">
+         <option value="<?php echo htmlspecialchars($post['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>">
          <?php echo htmlspecialchars($post['todogroup'],ENT_QUOTES,'UTF-8'); ?>
          </option>
       <?php endforeach; ?>
@@ -39,7 +39,10 @@ ToDoグループ名：<select name="groupname" style="width:215px">
 </select>
 <input type="submit" name="submit" value="削除" /><br />
 </form>
-
+<br />
+<form action="ToDoMng.php" method="post">
+<input type="submit" name="submit" value="ToDoリスト画面に戻る" />
+</form>
 
 
 

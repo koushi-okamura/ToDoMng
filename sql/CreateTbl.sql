@@ -1,12 +1,13 @@
 create table ToDoList_Tbl(
-keyid integer not null auto_increment,
-todogroup varchar(15),
+todolist_key integer not null auto_increment,
+todogroup_key integer,
 content varchar(50),
 closing_day datetime,
-primary key(keyid)
+primary key(todolist_key)
 );
 
 create table ToDoGrp_Tbl(
+todogroup_key integer not null auto_increment,
 todogroup varchar(15),
-primary key(todogroup)
+primary key(todogroup_key)
 );
