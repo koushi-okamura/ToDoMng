@@ -17,12 +17,14 @@ insert into ToDoList_Tbl values(
 '',
 2,
 '画面作成',
-'2014-4-16 10:00:00'
+'2014-4-16 10:00:00',
+true
 );
 
 insert into ToDoList_Tbl values(
 '',
 2,
 'test',
-'2014-4-21 10:00:00'
+'2014-4-21 10:00:00',
+true
 );

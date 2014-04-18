@@ -14,7 +14,7 @@
      var submitType = document.createElement("input");
      submitType.setAttribute("value",value);
      submitType.setAttribute("name",name);
-     submitType.setAttribute("type","text");
+     submitType.setAttribute("type",type);
      form.appendChild(submitType);
 
      var submitType2 = document.createElement("input");
@@ -23,12 +23,10 @@
      submitType2.setAttribute("type","hidden");
      form.appendChild(submitType2);
 
-     //	  alert(value2);
-
      form.action = action;
      form.method = "post";
      form.submit();
-    //     alert('通過後！！');
+     //     alert('通過後！！');
    }
 
 </script>
@@ -103,12 +101,21 @@
         </tr>
         <tr>
           <td>
-            <div style="width:250px;height:100px;overflow:auto">
+            <div style="width:320px;height:100px;overflow:auto">
             <form action="ToDoMng.php" method="post" >
               <?php if (count($groups) > 0): ?>
                 <?php $cnt = 0; ?>
                 <?php foreach($groups as $group): ?>
-                  <input type="hidden" name="group_key<?php echo ++$cnt ; ?>"
+                  <?php ++$cnt; ?>
+                  <input type="checkbox" name="group_select<?php echo $cnt ; ?>"
+                  value="<?php echo htmlspecialchars($group['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>"
+                  onclick="this.blur();this.focus();"
+                  onchange="doPost(form,'hidden',this.value,'group_select',
+                  this.checked,'group_checked','ToDoMng.php')"
+
+                  <?php if($group['checked'] == true) { ?>checked="checked" <?php } ?>
+                  />
+                  <input type="hidden" name="group_key<?php echo $cnt ; ?>"
                   value="<?php echo htmlspecialchars($group['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>"
                   />
                   <input type="text" name="group" maxlength="15" size="30" style="border:0"
@@ -116,6 +123,10 @@
                   onchange="doPost(form,this.type,this.value,this.name,
                   this.form.elements['group_key<?php echo $cnt; ?>'].value,'group_key','ToDoMng.php')"
                   />
+                  <input type="button" name="group_move<? echo $cnt; ?>"
+                  value="移動"
+                  />
+                  <br />
                 <?php endforeach; ?>
               <?php endif; ?>
             </form>

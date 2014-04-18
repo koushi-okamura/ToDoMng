@@ -9,5 +9,6 @@ primary key(todolist_key)
 create table ToDoGrp_Tbl(
 todogroup_key integer not null auto_increment,
 todogroup varchar(15),
+checked boolean,
 primary key(todogroup_key)
 );
