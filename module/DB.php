@@ -17,4 +17,11 @@ class DB
     return $result;  
   }
 
+  function Run($sql){
+    $result = self::Query($sql);
+    self::Query('commit;');
+    return $result;
+  }
+
+
 }

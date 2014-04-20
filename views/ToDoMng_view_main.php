@@ -8,25 +8,17 @@
 <body>
 
 <script type="text/javascript">
-   function doPost(form,type,value,name,value2,name2,action){
-   //          alert('通過！！');
-   //     name = name || "send"; //初期値
+   function doAppendChild(form,value,name){
      var submitType = document.createElement("input");
      submitType.setAttribute("value",value);
      submitType.setAttribute("name",name);
-     submitType.setAttribute("type",type);
+     submitType.setAttribute("type","hidden");
      form.appendChild(submitType);
-
-     var submitType2 = document.createElement("input");
-     submitType2.setAttribute("value",value2);
-     submitType2.setAttribute("name",name2);
-     submitType2.setAttribute("type","hidden");
-     form.appendChild(submitType2);
-
+   }
+   function doSubmit(form,action){
      form.action = action;
      form.method = "post";
      form.submit();
-     //     alert('通過後！！');
    }
 
 </script>
@@ -61,15 +53,19 @@
           <td valign="todolist">
             <div style="width:400px;height:100px;overflow:auto">
               <?php if (count($posts) > 0): ?>
+   <?php $cnt = 0; ?>
                 <?php foreach($posts as $post): ?>
-                  <input type="hidden" name="todolist_key" 
+<?php ++$cnt ?>
+                  <input type="hidden" name="todolist_key<?php echo $cnt; ?>" 
                   value="<?php echo htmlspecialchars($post['todolist_key'],ENT_QUOTES,'UTF-8'); ?>" />
                   <input type="hidden" name="todogroup_key"
                   value="<?php echo htmlspecialchars($post['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>" />
-                  <input type="hidden" name="todogroup" 
-                  value="<?php echo htmlspecialchars($post['content'],ENT_QUOTES,'UTF-8'); ?>" />
                   <input type="text" name="content" maxlength="50" size="30" style="border:0;" 
-                  value="<?php echo htmlspecialchars($post['content'],ENT_QUOTES,'UTF-8'); ?>" />
+                  value="<?php echo htmlspecialchars($post['content'],ENT_QUOTES,'UTF-8'); ?>" 
+                  onchange="doAppendChild(form,this.value,this.name);
+                            doAppendChild(form,this.form.elements['todolist_key<?php echo $cnt; ?>'].value,'todolist_key');
+                            doSubmit(form,'ToDoMng.php')"
+                  />
                   <input type="text" name="closing_day" size="15" style="border:0;" 
                   value="<?php echo htmlspecialchars($post['closing_day'],ENT_QUOTES,'UTF-8'); ?>" />
                   <br />
@@ -78,7 +74,10 @@
 
               <input type="hidden" name="todolist_key" value="" />
               <input type="hidden" name="todogroup_key" value="" />
-              <input type="text" name="content" maxlength="50" size="30" style="border:0;" value="" />
+              <input type="text" name="content" maxlength="50" size="30" style="border:0;" value=""
+              onchange="doAppendChild(form,this.value,this.name);
+                        doSubmit(form,'ToDoMng.php')"
+              />
               <input type="text" name="closing_day" size="15" style="border:0;" value="" />
               <br />
             </div>
@@ -110,9 +109,9 @@
                   <input type="checkbox" name="group_select<?php echo $cnt ; ?>"
                   value="<?php echo htmlspecialchars($group['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>"
                   onclick="this.blur();this.focus();"
-                  onchange="doPost(form,'hidden',this.value,'group_select',
-                  this.checked,'group_checked','ToDoMng.php')"
-
+                  onchange="doAppendChild(form,this.value,'group_select');
+                            doAppendChild(form,this.checked,'group_checked');
+                            doSubmit(form,'ToDoMng.php')"
                   <?php if($group['checked'] == true) { ?>checked="checked" <?php } ?>
                   />
                   <input type="hidden" name="group_key<?php echo $cnt ; ?>"
@@ -120,8 +119,10 @@
                   />
                   <input type="text" name="group" maxlength="15" size="30" style="border:0"
                   value="<?php echo htmlspecialchars($group['todogroup'],ENT_QUOTES,'UTF-8'); ?>"
-                  onchange="doPost(form,this.type,this.value,this.name,
-                  this.form.elements['group_key<?php echo $cnt; ?>'].value,'group_key','ToDoMng.php')"
+                  onchange="doAppendChild(form,this.value,this.name);
+                            doAppendChild(form,this.form.elements['group_key<?php echo $cnt; ?>'].value,'group_key');
+                            doSubmit(form,'ToDoMng.php')"
+
                   />
                   <input type="button" name="group_move<? echo $cnt; ?>"
                   value="移動"
