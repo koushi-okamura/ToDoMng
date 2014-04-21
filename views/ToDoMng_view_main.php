@@ -25,6 +25,27 @@
 
 
    <h1>ToDoマネージャー</h1>
+<form>
+<select name="circlekey" style="width:430px"
+onchange="doAppendChild(form,this.value,this.name);
+          doSubmit(form,'ToDoMng.php')"
+>
+  <option value="">現在表示中のToDoサークル名：
+  <?php if(count($circleselects) > 0): ?>
+    <?php foreach($circleselects as $circleselect): ?>
+      <?php echo htmlspecialchars($circleselect['todocircle'],ENT_QUOTES,'UTF-8'); ?>
+    <?php endforeach; ?>
+  <?php endif; ?></option>
+  <?php if (count($circles) > 0): ?>
+    <?php foreach($circles as $circle): ?>
+      <option value="<?php echo htmlspecialchars($circle['todocircle_key'],ENT_QUOTES,'UTF-8'); ?>">
+        <?php echo htmlspecialchars($circle['todocircle'],ENT_QUOTES,'UTF-8'); ?>
+      </option>
+    <?php endforeach; ?>
+  <?php endif; ?>
+</select>
+</form>
+<br />
 
    <?php if (count($errors)): ?>
       <ul class="error_list">
@@ -58,8 +79,8 @@
 <?php ++$cnt ?>
                   <input type="hidden" name="todolist_key<?php echo $cnt; ?>" 
                   value="<?php echo htmlspecialchars($post['todolist_key'],ENT_QUOTES,'UTF-8'); ?>" />
-                  <input type="hidden" name="todogroup_key"
-                  value="<?php echo htmlspecialchars($post['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>" />
+                  <input type="hidden" name="todocircle_key"
+                  value="<?php echo htmlspecialchars($post['todocircle_key'],ENT_QUOTES,'UTF-8'); ?>" />
                   <input type="text" name="content" maxlength="50" size="30" style="border:0;" 
                   value="<?php echo htmlspecialchars($post['content'],ENT_QUOTES,'UTF-8'); ?>" 
                   onchange="doAppendChild(form,this.value,this.name);
@@ -73,7 +94,7 @@
               <?php endif; ?>
 
               <input type="hidden" name="todolist_key" value="" />
-              <input type="hidden" name="todogroup_key" value="" />
+              <input type="hidden" name="todocircle_key" value="" />
               <input type="text" name="content" maxlength="50" size="30" style="border:0;" value=""
               onchange="doAppendChild(form,this.value,this.name);
                         doSubmit(form,'ToDoMng.php')"
@@ -111,11 +132,15 @@
                   onclick="this.blur();this.focus();"
                   onchange="doAppendChild(form,this.value,'group_select');
                             doAppendChild(form,this.checked,'group_checked');
-                            doSubmit(form,'ToDoMng.php')"
+doAppendChild(form,<?php echo $circleset; ?>,'circleset');
+                            doSubmit(form,'ToDoMng.php');"
                   <?php if($group['checked'] == true) { ?>checked="checked" <?php } ?>
                   />
                   <input type="hidden" name="group_key<?php echo $cnt ; ?>"
                   value="<?php echo htmlspecialchars($group['todogroup_key'],ENT_QUOTES,'UTF-8'); ?>"
+                  />
+                  <input type="hidden" name="list_key<?php echo $cnt ; ?>"
+                  value="<?php echo htmlspecialchars($group['todolist_key'],ENT_QUOTES,'UTF-8'); ?>"
                   />
                   <input type="text" name="group" maxlength="15" size="30" style="border:0"
                   value="<?php echo htmlspecialchars($group['todogroup'],ENT_QUOTES,'UTF-8'); ?>"

@@ -10,15 +10,15 @@ $errors = array();
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
   switch($_POST['submit']){
   case '作成':
-    $errors = $todomngobj->ToDoGrpInsert($_POST['groupname']);
+    $errors = $todomngobj->ToDoGroupInsert($_POST['groupname']);
     break;
   case '削除':
-    $todomngobj->ToDoGrpDelete($_POST['groupkey']);
+    $todomngobj->ToDoGroupDelete($_POST['groupkey']);
     break;
   }
 }
 
-$posts = $todomngobj->ToDoGrpSelect();
+$posts = $todomngobj->ToDoGroupSelect();
 
 // ビューファイルを読み込む
 include 'views/ToDoMng_view_group.php';

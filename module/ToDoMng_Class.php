@@ -21,10 +21,25 @@ class ToDoMng{
     return $posts;
   }
 
-  function ToDoListSelect(){
+  function ToDoCircleSelect(){
+    $sql = "SELECT todocircle_key,todocircle FROM ToDoCircle_Tbl"
+      . " ORDER BY todocircle ASC;";
+    $circles = array();
+    $circles = self::Select($sql);
+    return $circles;
+  }
 
-    $sql = "SELECT todolist_key,todogroup_key,content,closing_day FROM ToDoList_Tbl"
-     . " WHERE todogroup_key = ANY(select todogroup_key from ToDoGrp_Tbl where checked = true) "
+  function ToDoCircleSet($circle){
+    $sql = "SELECT todocircle_key,todocircle FROM ToDoCircle_Tbl"
+     . " WHERE todocircle_key = " . $circle . ";" ;
+    $circles = array();
+    $circles = self::Select($sql);
+    return $circles;
+  }
+  function ToDoListSelect($circle){
+    $sql = "SELECT todolist_key,todocircle_key,content,closing_day FROM ToDoList_Tbl"
+     . " WHERE todolist_key = ANY(select todolist_key from ToDoGroup_Tbl where checked = true) "
+     . " AND todocircle_key = " . $circle
      . " ORDER BY closing_day ASC;";
 
     $posts = array();
@@ -32,16 +47,18 @@ class ToDoMng{
     return $posts;
   }
 
-  function ToDoGrpSelect(){
+  function ToDoGroupSelect(){
 
-    $sql = "SELECT todogroup_key,todogroup,checked FROM ToDoGrp_Tbl ORDER BY todogroup ASC;";
+    $sql = "SELECT todogroup_key,todolist_key,todogroup,checked FROM ToDoGroup_Tbl" 
+         . " GROUP BY todogroup ORDER BY todogroup ASC;";
 
     $groups = array();
     $groups = self::Select($sql);
     return $groups;
   }
 
-  function ToDoGrpCheck($name){
+
+  function ToDoGroupCheck($name){
     // ToDoグループ名が正しく入力されているかチェック
     if (!isset($name) || !mb_strlen($name,'UTF-8')){
       $errors['groupname'] = 'ToDoグループ名を入力してください';
@@ -51,12 +68,12 @@ class ToDoMng{
     return $errors;
   }
 
-  function ToDoGrpInsert($name){
+  function ToDoGroupInsert($name){
     $mysqlobj = new DB;
     // エラーがなければ保存
-    $errors = self::ToDoGrpCheck($name);
+    $errors = self::ToDoGroupCheck($name);
     if (count($errors) === 0){
-      $sql = "INSERT INTO ToDoGrp_Tbl(todogroup) VALUES ('"
+      $sql = "INSERT INTO ToDoGroup_Tbl(todogroup) VALUES ('"
 	. $mysqlobj->Connect()->real_escape_string($name) . "');" ;
 
       $mysqlobj->Run($sql);
@@ -68,9 +85,9 @@ class ToDoMng{
     return $errors;
   }
 
-  function ToDoGrpDelete($key){
+  function ToDoGroupDelete($key){
     $mysqlobj = new DB;
-    $sql = "DELETE FROM ToDoGrp_Tbl WHERE todogroup_key = "
+    $sql = "DELETE FROM ToDoGroup_Tbl WHERE todogroup_key = "
       . $mysqlobj->Connect()->real_escape_string($key) . ";" ;
 
     $mysqlobj->Run($sql);
@@ -78,13 +95,13 @@ class ToDoMng{
     header('Location: http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
   }
 
-  function ToDoGrpUpdate($name,$key){
+  function ToDoGroupUpdate($name,$key){
     $mysqlobj = new DB;
     // エラーがなければ保存
-    $errors = self::ToDoGrpCheck($name);
+    $errors = self::ToDoGroupCheck($name);
      // エラーがなければ保存
     if (count($errors) === 0){
-      $sql = "UPDATE ToDoGrp_Tbl SET todogroup = '"
+      $sql = "UPDATE ToDoGroup_Tbl SET todogroup = '"
        . $mysqlobj->Connect()->real_escape_string($name) . "'"
        . "WHERE todogroup_key = " . $key . ";" ;
 
@@ -97,11 +114,11 @@ class ToDoMng{
     return $errors;
   }
 
-  function ToDoGrpUpdateChecked($checked,$key){
+  function ToDoGroupUpdateChecked($checked,$key){
     $mysqlobj = new DB;
     //  var_dump($_POST['group_select']);
     //  var_dump($_POST['group_checked']);
-    $sql = "UPDATE ToDoGrp_Tbl SET checked = " . $checked
+    $sql = "UPDATE ToDoGroup_Tbl SET checked = " . $checked
      . " WHERE todogroup_key = " . $key . ";";
     //    echo $sql,PHP_EOL;
     $mysqlobj->Run($sql);
